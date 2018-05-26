@@ -3,9 +3,11 @@ package pl.oskarpolak.blox.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import pl.oskarpolak.blox.models.CommentEntity;
 import pl.oskarpolak.blox.models.PostEntity;
+import pl.oskarpolak.blox.models.repositories.CommentRepository;
 import pl.oskarpolak.blox.models.repositories.PostRepository;
 
 import java.util.Optional;
@@ -17,14 +19,36 @@ public class MainController {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
     @GetMapping("/")
-    @ResponseBody
-    public String index() {
-        Optional<PostEntity> postEntity = postRepository.findById(1);
-        PostEntity postEntityWithoutOptional = postEntity.get();
+    public String index(Model model) {
+        model.addAttribute("posts", postRepository.findAll());
+        return "index";
+    }
 
+    @GetMapping("/post/{id}")
+    public String post(@PathVariable("id") int id,
+                       Model model) {
+        model.addAttribute("post", postRepository.findById(id).orElseThrow(IllegalStateException::new));
+        return "post";
+    }
 
-        return postEntityWithoutOptional.getTitle() + " " + postEntityWithoutOptional.getComments().toString();
+    @PostMapping("/comment/{id}")
+    public String addComment(@RequestParam("comment") String comment,
+                             @RequestParam("author")  String author,
+                             @PathVariable("id") int id){
+        PostEntity postEntity = postRepository.findById(id).get();
+
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setContent(comment);
+        commentEntity.setAuthor(author);
+        commentEntity.setPost(postEntity);
+
+        postEntity.getComments().add(commentEntity);
+        postRepository.save(postEntity);
+        return "redirect:/post/" + id;
     }
 
 }

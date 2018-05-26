@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.getTitle()}"></title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div  style="text-align: center;">
+        <h1 th:text="${post.getTitle()}"></h1>
+            <div>
+                <span th:text="${post.getArticle()}"></span>
+            </div>
+            <strong th:text="${'Przez ' + post.getAuthor() + '(' + post.getCategory().getName() + ')'}"></strong>
+        <br/>
+
+        <form th:action="${'/comment/' + post.getId()}" method="post">
+                <input type="text" name="comment" placeholder="Komentarz">
+                <input type="text" name="author" placeholder="Twój nick"> <br/>
+                <input type="submit" value="Wyślij">
+        </form>
+
+        <br/><br/><br/>
+
+        <div style="border: 1px black solid">
+            <div th:each="comment : ${post.getComments()}">
+                <h4 th:text="${comment.getAuthor()}"></h4>
+                <p th:text="${comment.getContent()}"></p>
+                <hr/>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
