@@ -10,28 +10,34 @@
 <body>
 
     <div  style="text-align: center;">
-        <h1 th:text="${post.getTitle()}"></h1>
+        <h1 style="border: 2px red dot-dot-dash;" th:text="${post.getTitle()}"></h1>
             <div>
                 <span th:text="${post.getArticle()}"></span>
             </div>
-            <strong th:text="${'Przez ' + post.getAuthor() + '(' + post.getCategory().getName() + ')'}"></strong>
-        <br/>
+            <strong th:text="${'Przez ' + post.getAuthor() + '  (' + post.getCategory().getName() + ')'}"></strong>
 
+        <br/> <br/> <br/> <br/> <br/>
+
+        Dodaj komentarz:
         <form th:action="${'/comment/' + post.getId()}" method="post">
                 <input type="text" name="comment" placeholder="Komentarz">
                 <input type="text" name="author" placeholder="Twój nick"> <br/>
                 <input type="submit" value="Wyślij">
         </form>
 
-        <br/><br/><br/>
+        <br/>
 
-        <div style="border: 1px black solid">
+        <div style="border: 3px black solid">
             <div th:each="comment : ${post.getComments()}">
                 <h4 th:text="${comment.getAuthor()}"></h4>
                 <p th:text="${comment.getContent()}"></p>
                 <hr/>
             </div>
         </div>
+
+        <br/>
+
+        <a href="/">Powrót</a>
     </div>
 
 

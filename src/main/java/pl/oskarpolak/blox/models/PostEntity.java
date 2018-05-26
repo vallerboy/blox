@@ -3,6 +3,7 @@ package pl.oskarpolak.blox.models;
 
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import pl.oskarpolak.blox.models.forms.PostForm;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public class PostEntity {
     private String article;
     private String author;
 
+    @Column(name = "sender_ip")
+    private String userIp;
+
     @Column(name = "creation_time")
     private LocalDateTime creationTime; // JSR310 (Java8 Time)
 
@@ -30,6 +34,7 @@ public class PostEntity {
 
     @OneToMany(mappedBy = "post", fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
+
 
     @Override
     public String toString() {
